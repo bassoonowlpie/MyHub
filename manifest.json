@@ -1,7 +1,7 @@
 {
-  "name": "MyHub",
-  "short_name": "MyHub",
-  "description": "個人工具台：倉頡、繁簡、貨幣、單位",
+  "name": "PieDash",
+  "short_name": "PieDash",
+  "description": "個人 Dashboard：工具、天氣、幣價、指數、新聞",
   "icons": [
     {
       "src": "assets/apple-touch-icon-76.png",
