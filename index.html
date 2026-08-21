@@ -161,13 +161,13 @@ main{
 
 /* ============ Home hero ============ */
 .hero{
-  text-align:center;padding:16px 0 28px;
-  display:flex;flex-direction:column;align-items:center;gap:14px;
+  text-align:center;padding:26px 0 20px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
 }
 .hero-title{
   font-family:var(--font-mono);
-  font-size:clamp(40px,11vw,72px);
-  font-weight:800;letter-spacing:.18em;
+  font-size:clamp(44px,13vw,72px);
+  font-weight:800;letter-spacing:.16em;
   color:var(--neon-cyan);
   text-shadow:0 0 14px rgba(0,240,255,.7),0 0 38px rgba(0,240,255,.35),0 0 70px rgba(0,240,255,.18);
   line-height:1;
@@ -178,49 +178,33 @@ main{
   background:linear-gradient(90deg,transparent,var(--neon-cyan),transparent);
   box-shadow:0 0 10px rgba(0,240,255,.7);
 }
+.hero-sub{margin:2px 0 0;color:var(--text-muted);font-size:var(--fs-sm);font-family:var(--font-mono);letter-spacing:.04em}
 
-/* ============ Tool card grid ============ */
-.grid{
-  display:grid;gap:14px;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-}
-.tool-card{
-  display:flex;flex-direction:column;align-items:flex-start;gap:14px;
-  padding:20px;border-radius:var(--radius-lg);
+/* ============ Tool list ============ */
+.tool-list{display:grid;gap:12px;grid-template-columns:1fr}
+.tool-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;border-radius:var(--radius-lg);
   background:linear-gradient(180deg,var(--surface),var(--bg-2));
   border:1px solid var(--border);
-  text-align:left;width:100%;
-  transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease);
-  position:relative;overflow:hidden;
+  text-align:left;width:100%;position:relative;overflow:hidden;
+  min-height:64px;cursor:pointer;
+  transition:transform .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease);
+  animation:fade .3s var(--ease) both;
 }
-.tool-card::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 80% at 100% 0%,rgba(0,240,255,.08),transparent 60%);
-  opacity:0;transition:opacity .3s var(--ease);
-}
-.tool-card::after{
+.tool-row::after{
   content:"";position:absolute;left:0;right:0;top:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(0,240,255,.6),transparent);
-  opacity:0;transition:opacity .25s var(--ease);
+  background:linear-gradient(90deg,transparent,rgba(0,240,255,.5),transparent);
+  opacity:.6;
 }
-.tool-card:hover{transform:translateY(-3px);border-color:rgba(0,240,255,.5);box-shadow:0 12px 30px -10px rgba(0,240,255,.25),0 0 0 1px rgba(0,240,255,.2)}
-.tool-card:hover::before{opacity:1}
-.tool-card:hover::after{opacity:1}
-.tool-card:active{transform:translateY(-1px) scale(.99)}
-.tc-icon{
-  width:72px;height:72px;border-radius:16px;display:block;
-  box-shadow:0 8px 24px -10px rgba(0,0,0,.6),0 0 18px rgba(0,240,255,.15);
-  transition:transform .25s var(--ease),box-shadow .25s var(--ease);
-}
-.tool-card:hover .tc-icon{transform:scale(1.04);box-shadow:0 10px 28px -8px rgba(0,0,0,.7),0 0 28px rgba(0,240,255,.35)}
-.tc-title{font-size:var(--fs-lg);font-weight:700;margin:0;color:var(--text-strong);letter-spacing:.02em}
-.tc-arrow{
-  margin-top:auto;display:inline-flex;align-items:center;gap:6px;
-  color:var(--neon-cyan);font-weight:600;font-size:var(--fs-sm);
-  font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;
-}
-.tc-arrow svg{width:16px;height:16px;transition:transform .2s var(--ease);filter:drop-shadow(0 0 6px rgba(0,240,255,.6))}
-.tool-card:hover .tc-arrow svg{transform:translateX(4px)}
+.tool-row:active{transform:scale(.985)}
+.tool-row:hover{border-color:rgba(0,240,255,.45);box-shadow:0 10px 26px -12px rgba(0,240,255,.3)}
+.tr-icon{width:46px;height:46px;border-radius:13px;flex:none;display:block;box-shadow:0 6px 18px -8px rgba(0,0,0,.6),0 0 14px rgba(0,240,255,.12)}
+.tr-text{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.tr-title{font-size:var(--fs-lg);font-weight:700;color:var(--text-strong);letter-spacing:.02em}
+.tr-desc{font-size:var(--fs-xs);color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tr-chev{width:20px;height:20px;flex:none;color:var(--neon-cyan);opacity:.65;transition:transform .2s var(--ease)}
+.tool-row:active .tr-chev{transform:translateX(3px)}
 
 /* ============ Tool common ============ */
 .tool-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
@@ -459,7 +443,7 @@ details[open] summary::before{transform:rotate(90deg)}
   .bottom-nav{display:none}
   main{padding-bottom:40px}
   .hero{padding:24px 0 40px}
-  .tc-icon{width:80px;height:80px}
+  .tool-list{grid-template-columns:1fr 1fr;max-width:780px;margin:0 auto;gap:14px}
 }
 @media (min-width:1024px){
   .app-header{padding-top:max(env(safe-area-inset-top),12px)}
@@ -523,27 +507,28 @@ details[open] summary::before{transform:rotate(90deg)}
     <div class="hero">
       <div class="hero-title">My<span class="accent">Hub</span></div>
       <div class="hero-rule"></div>
+      <p class="hero-sub">日常小工具 · 一頁搞掂</p>
     </div>
-    <div class="grid">
-      <button class="tool-card" data-goto="cangjie">
-        <img class="tc-icon" src="assets/icon-cangjie.png" alt="">
-        <h3 class="tc-title">倉頡碼</h3>
-        <span class="tc-arrow">OPEN <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="tool-list">
+      <button class="tool-row" data-goto="cangjie">
+        <img class="tr-icon" src="assets/icon-cangjie.png" alt="">
+        <span class="tr-text"><span class="tr-title">倉頡碼</span><span class="tr-desc">查中文字嘅倉頡輸入碼</span></span>
+        <svg class="tr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </button>
-      <button class="tool-card" data-goto="convert">
-        <img class="tc-icon" src="assets/icon-convert.png" alt="">
-        <h3 class="tc-title">繁簡轉換</h3>
-        <span class="tc-arrow">OPEN <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <button class="tool-row" data-goto="convert">
+        <img class="tr-icon" src="assets/icon-convert.png" alt="">
+        <span class="tr-text"><span class="tr-title">繁簡轉換</span><span class="tr-desc">繁體 ⇄ 簡體中文互轉</span></span>
+        <svg class="tr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </button>
-      <button class="tool-card" data-goto="currency">
-        <img class="tc-icon" src="assets/icon-currency.png" alt="">
-        <h3 class="tc-title">貨幣轉換</h3>
-        <span class="tc-arrow">OPEN <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <button class="tool-row" data-goto="currency">
+        <img class="tr-icon" src="assets/icon-currency.png" alt="">
+        <span class="tr-text"><span class="tr-title">貨幣轉換</span><span class="tr-desc">即時匯率 + 走勢圖</span></span>
+        <svg class="tr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </button>
-      <button class="tool-card" data-goto="unit">
-        <img class="tc-icon" src="assets/icon-unit.png" alt="">
-        <h3 class="tc-title">單位轉換</h3>
-        <span class="tc-arrow">OPEN <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <button class="tool-row" data-goto="unit">
+        <img class="tr-icon" src="assets/icon-unit.png" alt="">
+        <span class="tr-text"><span class="tr-title">單位轉換</span><span class="tr-desc">長度 / 重量 / 溫度等 9 類</span></span>
+        <svg class="tr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </button>
     </div>
   </section>
