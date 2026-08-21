@@ -269,6 +269,16 @@ main{
 .weather-sub{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 .weather-sub span{font-size:var(--fs-xs);color:var(--text-muted);font-family:var(--font-mono)}
 .weather-sub b{color:var(--text-strong);font-weight:700}
+.weather-forecast{display:flex;gap:4px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.weather-forecast::-webkit-scrollbar{display:none}
+.wf-day{flex:1 0 auto;min-width:36px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;border-radius:12px;transition:background .2s}
+.wf-day:first-child{background:rgba(99,102,241,.16)}
+.wf-dayname{font-size:var(--fs-xs);color:var(--text-muted);font-family:var(--font-mono)}
+.wf-day:first-child .wf-dayname{color:var(--accent);font-weight:700}
+.wf-icon{font-size:23px;line-height:1;filter:drop-shadow(0 0 6px rgba(0,240,255,.3))}
+.wf-temp{font-size:var(--fs-xs);font-family:var(--font-mono);color:var(--text-strong);line-height:1.3}
+.wf-temp .lo{color:var(--text-muted)}
+.wf-pop{font-size:10px;color:#38bdf8;font-family:var(--font-mono);line-height:1}
 
 /* Crypto widget */
 .crypto-row{display:flex;align-items:center;gap:12px;padding:10px 0}
@@ -1430,11 +1440,14 @@ details[open] summary::before{transform:rotate(90deg)}
         const c=JSON.parse(localStorage.getItem(key)||"null");
         if(c && c.d && (Date.now()-c.t<30*60*1000)){ renderWeather(c.d); return; }
       }
-      const u=`https://api.open-meteo.com/v1/forecast?latitude=${HK_LAT}&longitude=${HK_LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=Asia/Hong_Kong`;
+      const u=`https://api.open-meteo.com/v1/forecast?latitude=${HK_LAT}&longitude=${HK_LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=7&timezone=Asia/Hong_Kong`;
       const r=await fetch(u);
       if(!r.ok) throw new Error("weather http");
-      const cur=(await r.json()).current;
-      const d={temp:cur.temperature_2m,feels:cur.apparent_temperature,hum:cur.relative_humidity_2m,wind:cur.wind_speed_10m,code:cur.weather_code,ts:Date.now()};
+      const j=await r.json();
+      const cur=j.current, dy=j.daily;
+      const d={temp:cur.temperature_2m,feels:cur.apparent_temperature,hum:cur.relative_humidity_2m,wind:cur.wind_speed_10m,code:cur.weather_code,
+        days:(dy?dy.time:[]).map((t,i)=>({t,w:dy.weather_code[i],max:dy.temperature_2m_max[i],min:dy.temperature_2m_min[i],pop:dy.precipitation_probability_max[i]})),
+        ts:Date.now()};
       try{ localStorage.setItem(key,JSON.stringify({t:Date.now(),d})); }catch(e){}
       renderWeather(d);
     }catch(e){
@@ -1446,8 +1459,17 @@ details[open] summary::before{transform:rotate(90deg)}
   function renderWeather(d){
     const card=document.getElementById("weatherCard");
     const [icon,desc]=wmo(d.code);
+    const WD=["日","一","二","三","四","五","六"];
+    const days=(d.days||[]).map((x,i)=>{
+      const [Y,M,D]=x.t.split('-').map(Number);
+      const nm=i===0?"今日":"週"+WD[new Date(Y,M-1,D).getDay()];
+      const [ic,ds]=wmo(x.w);
+      const pop=(x.pop>0)?`<div class="wf-pop">💧${x.pop}%</div>`:"";
+      return `<div class="wf-day"><div class="wf-dayname">${nm}</div><div class="wf-icon">${ic}</div><div class="wf-temp">${Math.round(x.max)}°<span class="lo"> ${Math.round(x.min)}°</span></div>${pop}</div>`;
+    }).join("");
     card.innerHTML=`<div class="weather-main"><span class="weather-icon">${icon}</span><div><div class="weather-temp">${Math.round(d.temp)}°</div><div class="weather-desc">香港 · ${desc}</div></div></div>
-    <div class="weather-sub"><span>體感 <b>${Math.round(d.feels)}°</b></span><span>濕度 <b>${Math.round(d.hum)}%</b></span><span>風 <b>${Math.round(d.wind)} km/h</b></span></div>`;
+    <div class="weather-sub"><span>體感 <b>${Math.round(d.feels)}°</b></span><span>濕度 <b>${Math.round(d.hum)}%</b></span><span>風 <b>${Math.round(d.wind)} km/h</b></span></div>
+    <div class="weather-forecast">${days}</div>`;
   }
 
   async function fetchCrypto(force){
