@@ -392,11 +392,13 @@ details[open] summary::before{transform:rotate(90deg)}
   box-shadow:0 0 12px rgba(0,240,255,.2);
 }
 .unit-row{display:grid;gap:8px;grid-template-columns:1fr auto 1fr;align-items:end;margin-top:8px}
+.unit-row select{font-size:13px}
 @media (max-width:640px){
   .cat-row{display:grid;grid-template-columns:repeat(3,1fr);flex-wrap:nowrap;overflow-x:visible;gap:6px}
   .cat-row button{padding:7px 8px;font-size:11px}
-  .unit-row{grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
+  .unit-row{grid-template-columns:1fr;gap:8px;align-items:stretch}
   .unit-row>button{grid-column:1/-1;justify-self:center;margin:2px 0;transform:rotate(90deg)}
+  .unit-row select{font-size:13px}
 }
 .unit-result{
   margin-top:14px;padding:14px;border-radius:var(--radius);
@@ -1130,52 +1132,52 @@ details[open] summary::before{transform:rotate(90deg)}
   /* ============ Unit ============ */
   const UNITS={
     length:{name:"長度",base:"m",list:[
-      {k:"mm",n:"毫米",f:0.001},{k:"cm",n:"厘米",f:0.01},{k:"m",n:"米",f:1},
-      {k:"km",n:"公里",f:1000},{k:"in",n:"英寸",f:0.0254},{k:"ft",n:"英尺",f:0.3048},
-      {k:"yd",n:"碼",f:0.9144},{k:"mi",n:"英里",f:1609.344},{k:"nmi",n:"海里",f:1852}
+      {k:"mm",n:"毫米",e:"millimeter",f:0.001},{k:"cm",n:"厘米",e:"centimeter",f:0.01},{k:"m",n:"米",e:"meter",f:1},
+      {k:"km",n:"公里",e:"kilometer",f:1000},{k:"in",n:"英寸",e:"inch",f:0.0254},{k:"ft",n:"英尺",e:"foot",f:0.3048},
+      {k:"yd",n:"碼",e:"yard",f:0.9144},{k:"mi",n:"英里",e:"mile",f:1609.344},{k:"nmi",n:"海里",e:"nautical mile",f:1852}
     ]},
     mass:{name:"重量",base:"g",list:[
-      {k:"mg",n:"毫克",f:0.001},{k:"g",n:"克",f:1},{k:"kg",n:"公斤",f:1000},
-      {k:"t",n:"公噸",f:1e6},{k:"oz",n:"盎司",f:28.3495},
-      {k:"lb",n:"磅",f:453.592},{k:"st",n:"英石",f:6350.29}
+      {k:"mg",n:"毫克",e:"milligram",f:0.001},{k:"g",n:"克",e:"gram",f:1},{k:"kg",n:"公斤",e:"kilogram",f:1000},
+      {k:"t",n:"公噸",e:"metric ton",f:1e6},{k:"oz",n:"盎司",e:"ounce",f:28.3495},
+      {k:"lb",n:"磅",e:"pound",f:453.592},{k:"st",n:"英石",e:"stone",f:6350.29}
     ]},
     temperature:{name:"溫度",base:"C",list:[
-      {k:"C",n:"攝氏 °C",to:(c)=>c,from:(v)=>v},
-      {k:"F",n:"華氏 °F",to:(c)=>c*9/5+32,from:(v)=>(v-32)*5/9},
-      {k:"K",n:"克氏 K",to:(c)=>c+273.15,from:(v)=>v-273.15}
+      {k:"C",n:"攝氏 °C",e:"Celsius",to:(c)=>c,from:(v)=>v},
+      {k:"F",n:"華氏 °F",e:"Fahrenheit",to:(c)=>c*9/5+32,from:(v)=>(v-32)*5/9},
+      {k:"K",n:"克氏 K",e:"Kelvin",to:(c)=>c+273.15,from:(v)=>v-273.15}
     ]},
     area:{name:"面積",base:"m2",list:[
-      {k:"mm2",n:"平方毫米",f:1e-6},{k:"cm2",n:"平方厘米",f:1e-4},
-      {k:"m2",n:"平方米",f:1},{k:"km2",n:"平方公里",f:1e6},
-      {k:"ha",n:"公頃",f:1e4},{k:"acre",n:"英畝",f:4046.8564224},
-      {k:"ft2",n:"平方呎",f:0.09290304},{k:"ping",n:"坪",f:3.305785}
+      {k:"mm2",n:"平方毫米",e:"square millimeter",f:1e-6},{k:"cm2",n:"平方厘米",e:"square centimeter",f:1e-4},
+      {k:"m2",n:"平方米",e:"square meter",f:1},{k:"km2",n:"平方公里",e:"square kilometer",f:1e6},
+      {k:"ha",n:"公頃",e:"hectare",f:1e4},{k:"acre",n:"英畝",e:"acre",f:4046.8564224},
+      {k:"ft2",n:"平方呎",e:"square foot",f:0.09290304},{k:"ping",n:"坪",e:"ping",f:3.305785}
     ]},
     volume:{name:"體積",base:"L",list:[
-      {k:"mL",n:"毫升",f:0.001},{k:"L",n:"升",f:1},{k:"m3",n:"立方米",f:1000},
-      {k:"gal",n:"美制加侖",f:3.78541},{k:"qt",n:"夸脫",f:0.946353},
-      {k:"pt",n:"品脫",f:0.473176},{k:"cup",n:"杯",f:0.236588},
-      {k:"floz",n:"液體盎司",f:0.0295735}
+      {k:"mL",n:"毫升",e:"milliliter",f:0.001},{k:"L",n:"升",e:"liter",f:1},{k:"m3",n:"立方米",e:"cubic meter",f:1000},
+      {k:"gal",n:"美制加侖",e:"US gallon",f:3.78541},{k:"qt",n:"夸脫",e:"quart",f:0.946353},
+      {k:"pt",n:"品脫",e:"pint",f:0.473176},{k:"cup",n:"杯",e:"cup",f:0.236588},
+      {k:"floz",n:"液體盎司",e:"fluid ounce",f:0.0295735}
     ]},
     speed:{name:"速度",base:"m/s",list:[
-      {k:"m/s",n:"米/秒",f:1},{k:"km/h",n:"公里/小時",f:0.277778},
-      {k:"mph",n:"英里/小時",f:0.44704},{k:"knot",n:"節",f:0.514444}
+      {k:"m/s",n:"米/秒",e:"meter per second",f:1},{k:"km/h",n:"公里/小時",e:"kilometer per hour",f:0.277778},
+      {k:"mph",n:"英里/小時",e:"mile per hour",f:0.44704},{k:"knot",n:"節",e:"knot",f:0.514444}
     ]},
     time:{name:"時間",base:"s",list:[
-      {k:"ms",n:"毫秒",f:0.001},{k:"s",n:"秒",f:1},{k:"min",n:"分鐘",f:60},
-      {k:"h",n:"小時",f:3600},{k:"day",n:"天",f:86400},
-      {k:"week",n:"週",f:604800}
+      {k:"ms",n:"毫秒",e:"millisecond",f:0.001},{k:"s",n:"秒",e:"second",f:1},{k:"min",n:"分鐘",e:"minute",f:60},
+      {k:"h",n:"小時",e:"hour",f:3600},{k:"day",n:"天",e:"day",f:86400},
+      {k:"week",n:"週",e:"week",f:604800}
     ]},
     data:{name:"資料量",base:"B",list:[
-      {k:"bit",n:"位元",f:0.125},{k:"B",n:"字節",f:1},
-      {k:"KB",n:"千字節",f:1e3},{k:"MB",n:"百萬字節",f:1e6},
-      {k:"GB",n:"十億字節",f:1e9},{k:"TB",n:"兆字節",f:1e12},
-      {k:"KiB",n:"Kibibyte",f:1024},{k:"MiB",n:"Mebibyte",f:1048576},
-      {k:"GiB",n:"Gibibyte",f:1073741824},{k:"TiB",n:"Tebibyte",f:1099511627776}
+      {k:"bit",n:"位元",e:"bit",f:0.125},{k:"B",n:"字節",e:"byte",f:1},
+      {k:"KB",n:"千字節",e:"kilobyte",f:1e3},{k:"MB",n:"百萬字節",e:"megabyte",f:1e6},
+      {k:"GB",n:"十億字節",e:"gigabyte",f:1e9},{k:"TB",n:"兆字節",e:"terabyte",f:1e12},
+      {k:"KiB",n:"Kibibyte",e:"kibibyte",f:1024},{k:"MiB",n:"Mebibyte",e:"mebibyte",f:1048576},
+      {k:"GiB",n:"Gibibyte",e:"gibibyte",f:1073741824},{k:"TiB",n:"Tebibyte",e:"tebibyte",f:1099511627776}
     ]},
     energy:{name:"能量",base:"J",list:[
-      {k:"J",n:"焦耳",f:1},{k:"kJ",n:"千焦",f:1000},
-      {k:"cal",n:"卡路里",f:4.184},{k:"kcal",n:"千卡",f:4184},
-      {k:"Wh",n:"瓦時",f:3600},{k:"kWh",n:"千瓦時",f:3.6e6}
+      {k:"J",n:"焦耳",e:"joule",f:1},{k:"kJ",n:"千焦",e:"kilojoule",f:1000},
+      {k:"cal",n:"卡路里",e:"calorie",f:4.184},{k:"kcal",n:"千卡",e:"kilocalorie",f:4184},
+      {k:"Wh",n:"瓦時",e:"watt-hour",f:3600},{k:"kWh",n:"千瓦時",e:"kilowatt-hour",f:3.6e6}
     ]}
   };
   const unitCats=document.getElementById("unitCats");
@@ -1198,7 +1200,7 @@ details[open] summary::before{transform:rotate(90deg)}
     const list=UNITS[curCat].list;
     unitFrom.innerHTML=""; unitTo.innerHTML="";
     list.forEach((u,i)=>{
-      const o=document.createElement("option");o.value=u.k;o.textContent=`${u.k} · ${u.n}`;
+      const o=document.createElement("option");o.value=u.k;o.textContent=`${u.n} ${u.e}`;
       const o2=o.cloneNode(true);
       unitFrom.appendChild(o); unitTo.appendChild(o2);
     });
