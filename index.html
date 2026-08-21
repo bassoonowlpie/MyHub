@@ -218,6 +218,82 @@ main{
 .tr-chev{width:20px;height:20px;flex:none;color:var(--neon-cyan);opacity:.65;transition:transform .2s var(--ease)}
 .tool-row:active .tr-chev{transform:translateX(3px)}
 
+/* ============ Dashboard ============ */
+.hero--dash{padding:16px 0 6px}
+.hero--dash .hero-title{font-size:clamp(34px,9vw,52px)}
+.dash{display:grid;gap:16px;grid-template-columns:1fr}
+.dash-sec{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:14px;
+}
+.dash-sec-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.dash-sec-title{
+  font-family:var(--font-mono);font-size:var(--fs-sm);font-weight:700;
+  letter-spacing:.14em;color:var(--neon-cyan);text-transform:uppercase;
+  display:flex;align-items:baseline;gap:7px;
+}
+.dash-sec-title i{font-style:normal;color:var(--text-muted);font-weight:600;letter-spacing:.02em;font-family:var(--font);font-size:var(--fs-xs)}
+.dash-refresh{
+  margin-left:auto;width:30px;height:30px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text-muted);font-size:16px;cursor:pointer;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;transition:.15s;
+}
+.dash-refresh:hover{border-color:var(--neon-cyan);color:var(--neon-cyan)}
+.dash-refresh.spin{animation:rot 1s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.widget-load{padding:22px 0;text-align:center;color:var(--text-dim);font-size:var(--fs-sm);font-family:var(--font-mono)}
+
+/* 新聞 */
+.news-tabs{display:flex;gap:4px;background:var(--surface-2);padding:3px;border-radius:9px;border:1px solid var(--border)}
+.news-tab{
+  padding:5px 14px;border-radius:7px;border:none;background:transparent;color:var(--text-muted);
+  font-size:var(--fs-xs);font-weight:700;cursor:pointer;transition:.15s;font-family:var(--font);
+}
+.news-tab.active{background:linear-gradient(180deg,rgba(0,240,255,.18),rgba(0,240,255,.05));color:var(--neon-cyan);box-shadow:var(--glow-soft)}
+.news-wrap{display:grid;gap:12px;grid-template-columns:1fr}
+.news-pane{display:none;flex-direction:column}
+.news-pane.active{display:flex}
+.news-item{
+  display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:10px;
+  text-decoration:none;border:1px solid transparent;transition:.15s;
+}
+.news-item:hover{background:var(--surface-2);border-color:var(--border-strong)}
+.news-title{font-size:var(--fs-sm);font-weight:600;color:var(--text);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news-meta{font-size:var(--fs-xs);color:var(--text-dim);font-family:var(--font-mono);letter-spacing:.02em}
+
+/* 天氣 widget */
+.weather-main{display:flex;align-items:center;gap:14px}
+.weather-icon{font-size:44px;line-height:1;filter:drop-shadow(0 0 10px rgba(0,240,255,.35))}
+.weather-temp{font-size:var(--fs-4xl);font-weight:800;font-family:var(--font-mono);color:var(--text-strong);line-height:1}
+.weather-desc{font-size:var(--fs-sm);color:var(--text-muted);margin-top:3px}
+.weather-sub{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.weather-sub span{font-size:var(--fs-xs);color:var(--text-muted);font-family:var(--font-mono)}
+.weather-sub b{color:var(--text-strong);font-weight:700}
+
+/* Crypto widget */
+.crypto-row{display:flex;align-items:center;gap:12px;padding:10px 0}
+.crypto-row + .crypto-row{border-top:1px solid var(--border)}
+.crypto-ico{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex:none}
+.crypto-ico.btc{background:linear-gradient(180deg,#f7931a,#d97a10);color:#fff}
+.crypto-ico.eth{background:linear-gradient(180deg,#8aa3ff,#5b6dd6);color:#fff}
+.crypto-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.crypto-name{font-size:var(--fs-sm);font-weight:700;color:var(--text-strong)}
+.crypto-price{font-size:var(--fs-base);font-family:var(--font-mono);font-weight:700;color:var(--text)}
+.crypto-delta{font-size:var(--fs-sm);font-weight:700;font-family:var(--font-mono);flex:none}
+.crypto-delta.up{color:#ff5d5d}
+.crypto-delta.down{color:#22c55e}
+
+/* 工具 grid */
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tool-tile{
+  display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 8px;
+  border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text-muted);font-size:var(--fs-xs);font-weight:600;cursor:pointer;transition:.15s;
+}
+.tool-tile img{width:40px;height:40px;border-radius:11px;display:block}
+.tool-tile:hover{border-color:var(--neon-cyan);color:var(--text-strong);box-shadow:var(--glow-soft)}
+.tool-tile:active{transform:scale(.97)}
+
 /* ============ Tool common ============ */
 .tool-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
 .tool-head h2{
@@ -456,6 +532,10 @@ details[open] summary::before{transform:rotate(90deg)}
   main{padding-bottom:40px}
   .hero{padding:24px 0 40px}
   .tool-list{grid-template-columns:1fr 1fr;max-width:780px;margin:0 auto;gap:14px}
+  .dash{grid-template-columns:1fr 320px;align-items:start}
+  .news-tabs{display:none}
+  .news-wrap{grid-template-columns:1fr 1fr;gap:16px}
+  .news-wrap .news-pane{display:flex}
 }
 @media (min-width:1024px){
   .app-header{padding-top:max(env(safe-area-inset-top),12px)}
@@ -514,34 +594,70 @@ details[open] summary::before{transform:rotate(90deg)}
 
 <main id="main">
 
-  <!-- ============ Home ============ -->
+  <!-- ============ Home (Dashboard) ============ -->
   <section id="view-home" class="view active" aria-label="首頁">
-    <div class="hero">
+    <div class="hero hero--dash">
       <div class="hero-title">My<span class="accent">Hub</span></div>
       <div class="hero-rule"></div>
-      <p class="hero-sub">日常小工具 · 一頁搞掂</p>
     </div>
-    <div class="tool-list">
-      <button class="tool-row" data-goto="cangjie">
-        <img class="tr-icon" src="assets/icon-cangjie.png" alt="">
-        <span class="tr-text"><span class="tr-title">倉頡碼</span><span class="tr-desc">查中文字嘅倉頡輸入碼</span></span>
-        <svg class="tr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-      <button class="tool-row" data-goto="convert">
-        <img class="tr-icon" src="assets/icon-convert.png" alt="">
-        <span class="tr-text"><span class="tr-title">繁簡轉換</span><span class="tr-desc">繁體 ⇄ 簡體中文互轉</span></span>
-        <svg class="tr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-      <button class="tool-row" data-goto="currency">
-        <img class="tr-icon" src="assets/icon-currency.png" alt="">
-        <span class="tr-text"><span class="tr-title">貨幣轉換</span><span class="tr-desc">即時匯率 + 走勢圖</span></span>
-        <svg class="tr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-      <button class="tool-row" data-goto="unit">
-        <img class="tr-icon" src="assets/icon-unit.png" alt="">
-        <span class="tr-text"><span class="tr-title">單位轉換</span><span class="tr-desc">長度 / 重量 / 溫度等 9 類</span></span>
-        <svg class="tr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
+
+    <div class="dash">
+      <!-- 主區：新聞 -->
+      <div class="dash-main">
+        <div class="dash-sec">
+          <div class="dash-sec-head">
+            <span class="dash-sec-title">NEWS<i>新聞</i></span>
+            <div class="news-tabs" role="tablist">
+              <button class="news-tab active" data-news-tab="hk" role="tab" aria-selected="true">香港</button>
+              <button class="news-tab" data-news-tab="world" role="tab" aria-selected="false">國際</button>
+            </div>
+            <button class="dash-refresh" id="newsRefresh" title="更新新聞">⟳</button>
+          </div>
+          <div class="news-wrap">
+            <div class="news-pane active" id="newsHk" role="tabpanel" aria-label="香港新聞"><div class="widget-load">載入中…</div></div>
+            <div class="news-pane" id="newsWorld" role="tabpanel" aria-label="國際新聞"><div class="widget-load">載入中…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 側欄：天氣 / 市況 / 工具 -->
+      <div class="dash-side">
+        <div class="dash-sec">
+          <div class="dash-sec-head">
+            <span class="dash-sec-title">WEATHER<i>天氣</i></span>
+            <button class="dash-refresh" id="weatherRefresh" title="更新天氣">⟳</button>
+          </div>
+          <div class="widget" id="weatherCard"><div class="widget-load">載入中…</div></div>
+        </div>
+
+        <div class="dash-sec">
+          <div class="dash-sec-head">
+            <span class="dash-sec-title">MARKET<i>市況</i></span>
+            <button class="dash-refresh" id="cryptoRefresh" title="更新價格">⟳</button>
+          </div>
+          <div class="widget" id="cryptoCard"><div class="widget-load">載入中…</div></div>
+        </div>
+
+        <div class="dash-sec">
+          <div class="dash-sec-head">
+            <span class="dash-sec-title">TOOLS<i>工具</i></span>
+          </div>
+          <div class="tool-grid">
+            <button class="tool-tile" data-goto="cangjie">
+              <img src="assets/icon-cangjie.png" alt=""><span>倉頡碼</span>
+            </button>
+            <button class="tool-tile" data-goto="convert">
+              <img src="assets/icon-convert.png" alt=""><span>繁簡轉換</span>
+            </button>
+            <button class="tool-tile" data-goto="currency">
+              <img src="assets/icon-currency.png" alt=""><span>貨幣轉換</span>
+            </button>
+            <button class="tool-tile" data-goto="unit">
+              <img src="assets/icon-unit.png" alt=""><span>單位轉換</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -727,6 +843,7 @@ details[open] summary::before{transform:rotate(90deg)}
     if(name==="cangjie") cjRefresh();
     if(name==="convert") cvRefresh();
     if(name==="currency"){ curRefresh(false); requestAnimationFrame(()=>renderTrend()); }
+    if(name==="home"){ fetchWeather(false); fetchCrypto(false); fetchNews(false); }
     window.scrollTo({top:0,behavior:"instant" in window?"instant":"auto"});
   }
   function onHash(){ goto((location.hash||"#home").slice(1)); }
@@ -1234,6 +1351,148 @@ details[open] summary::before{transform:rotate(90deg)}
   function escapeHtml(s){
     return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
   }
+
+  /* ============ Dashboard widgets ============ */
+  const HK_LAT=22.3193, HK_LON=114.1694;
+  const WMO={
+    0:["☀️","晴朗"],1:["🌤️","大致晴朗"],2:["⛅","間中多雲"],3:["☁️","多雲"],
+    45:["🌫️","有霧"],48:["🌫️","霧淞"],
+    51:["🌦️","毛毛雨"],53:["🌦️","毛毛雨"],55:["🌦️","密毛毛雨"],
+    61:["🌧️","微雨"],63:["🌧️","雨"],65:["🌧️","大雨"],
+    66:["🌧️","凍雨"],67:["🌧️","凍雨"],
+    71:["🌨️","微雪"],73:["🌨️","雪"],75:["🌨️","大雪"],77:["🌨️","霰"],
+    80:["🌧️","陣雨"],81:["🌧️","陣雨"],82:["🌧️","強陣雨"],
+    85:["🌨️","陣雪"],86:["🌨️","陣雪"],
+    95:["⛈️","雷雨"],96:["⛈️","雷雨伴雹"],99:["⛈️","強雷雨伴雹"]
+  };
+  function wmo(code){ return WMO[code]||["🌡️","—"]; }
+
+  async function fetchWeather(force){
+    const card=document.getElementById("weatherCard");
+    const key="myhub_weather";
+    try{
+      if(!force){
+        const c=JSON.parse(localStorage.getItem(key)||"null");
+        if(c && c.d && (Date.now()-c.t<30*60*1000)){ renderWeather(c.d); return; }
+      }
+      const u=`https://api.open-meteo.com/v1/forecast?latitude=${HK_LAT}&longitude=${HK_LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=Asia/Hong_Kong`;
+      const r=await fetch(u);
+      if(!r.ok) throw new Error("weather http");
+      const cur=(await r.json()).current;
+      const d={temp:cur.temperature_2m,feels:cur.apparent_temperature,hum:cur.relative_humidity_2m,wind:cur.wind_speed_10m,code:cur.weather_code,ts:Date.now()};
+      try{ localStorage.setItem(key,JSON.stringify({t:Date.now(),d})); }catch(e){}
+      renderWeather(d);
+    }catch(e){
+      const c=JSON.parse(localStorage.getItem(key)||"null");
+      if(c && c.d){ renderWeather(c.d); }
+      else{ card.innerHTML='<div class="widget-load">天氣載入失敗</div>'; }
+    }
+  }
+  function renderWeather(d){
+    const card=document.getElementById("weatherCard");
+    const [icon,desc]=wmo(d.code);
+    card.innerHTML=`<div class="weather-main"><span class="weather-icon">${icon}</span><div><div class="weather-temp">${Math.round(d.temp)}°</div><div class="weather-desc">香港 · ${desc}</div></div></div>
+    <div class="weather-sub"><span>體感 <b>${Math.round(d.feels)}°</b></span><span>濕度 <b>${Math.round(d.hum)}%</b></span><span>風 <b>${Math.round(d.wind)} km/h</b></span></div>`;
+  }
+
+  async function fetchCrypto(force){
+    const card=document.getElementById("cryptoCard");
+    const key="myhub_crypto";
+    try{
+      if(!force){
+        const c=JSON.parse(localStorage.getItem(key)||"null");
+        if(c && c.d && (Date.now()-c.t<60*1000)){ renderCrypto(c.d); return; }
+      }
+      const [b,e]=await Promise.all([
+        fetch("https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT").then(r=>r.json()),
+        fetch("https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT").then(r=>r.json())
+      ]);
+      const d={btc:{p:+b.lastPrice,ch:+b.priceChangePercent},eth:{p:+e.lastPrice,ch:+e.priceChangePercent},ts:Date.now()};
+      try{ localStorage.setItem(key,JSON.stringify({t:Date.now(),d})); }catch(err){}
+      renderCrypto(d);
+    }catch(err){
+      const c=JSON.parse(localStorage.getItem(key)||"null");
+      if(c && c.d){ renderCrypto(c.d); }
+      else{ card.innerHTML='<div class="widget-load">價格載入失敗</div>'; }
+    }
+  }
+  function usdt(n){ return "$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function renderCrypto(d){
+    const card=document.getElementById("cryptoCard");
+    const row=(ico,cls,name,v)=>`<div class="crypto-row"><span class="crypto-ico ${cls}">${ico}</span><div class="crypto-info"><span class="crypto-name">${name}</span><span class="crypto-price">${usdt(v.p)} <span style="color:var(--text-dim)">USDT</span></span></div><span class="crypto-delta ${v.ch>=0?'up':'down'}">${v.ch>=0?'▲ +':'▼ '}${v.ch.toFixed(2)}%</span></div>`;
+    card.innerHTML=row("₿","btc","Bitcoin",d.btc)+row("Ξ","eth","Ethereum",d.eth);
+  }
+
+  const NEWS_SRC={
+    hk:"https://news.google.com/rss?hl=zh-HK&gl=HK&ceid=HK:zh-Hant",
+    world:"https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en"
+  };
+  async function fetchNews(force){
+    const key="myhub_news";
+    try{
+      if(!force){
+        const c=JSON.parse(localStorage.getItem(key)||"null");
+        if(c && c.d && (Date.now()-c.t<10*60*1000)){ renderNews(c.d); return; }
+      }
+      const res=await Promise.all([
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(NEWS_SRC.hk)}`).then(r=>r.json()),
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(NEWS_SRC.world)}`).then(r=>r.json())
+      ]);
+      const d={hk:(res[0].items||[]),world:(res[1].items||[]),ts:Date.now()};
+      try{ localStorage.setItem(key,JSON.stringify({t:Date.now(),d})); }catch(e){}
+      renderNews(d);
+    }catch(e){
+      const c=JSON.parse(localStorage.getItem(key)||"null");
+      if(c && c.d){ renderNews(c.d); }
+      else{
+        document.getElementById("newsHk").innerHTML='<div class="widget-load">新聞載入失敗</div>';
+        document.getElementById("newsWorld").innerHTML='<div class="widget-load">新聞載入失敗</div>';
+      }
+    }
+  }
+  function relTime(iso){
+    if(!iso) return "";
+    // rss2json 掉咗 timezone；Google News 原時間係 GMT，補返 Z 當 UTC 解析
+    let t;
+    if(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(iso)) t=new Date(iso.replace(" ","T")+"Z").getTime();
+    else t=new Date(iso).getTime();
+    if(!t || isNaN(t)) return "";
+    const m=Math.floor((Date.now()-t)/60000);
+    if(m<1) return "剛剛";
+    if(m<60) return m+" 分鐘前";
+    const h=Math.floor(m/60);
+    if(h<24) return h+" 小時前";
+    const d=Math.floor(h/24);
+    if(d<7) return d+" 日前";
+    return new Date(t).toLocaleDateString("zh-HK",{month:"short",day:"numeric"});
+  }
+  function renderNews(d){
+    const pane=(id,items)=>{
+      const el=document.getElementById(id);
+      if(!items || !items.length){ el.innerHTML='<div class="widget-load">暫無新聞</div>'; return; }
+      el.innerHTML=items.slice(0,12).map(it=>{
+        let title=(it.title||"").trim(), src="";
+        const idx=title.lastIndexOf(" - ");
+        if(idx>0){ src=title.slice(idx+3).trim(); title=title.slice(0,idx).trim(); }
+        const meta=[src,relTime(it.pubDate)].filter(Boolean).join(" · ");
+        return `<a class="news-item" href="${escapeHtml(it.link||"#")}" target="_blank" rel="noopener"><span class="news-title">${escapeHtml(title)}</span><span class="news-meta">${meta}</span></a>`;
+      }).join("");
+    };
+    pane("newsHk",d.hk); pane("newsWorld",d.world);
+  }
+
+  function spinBtn(id){ const b=document.getElementById(id); b.classList.add("spin"); setTimeout(()=>b.classList.remove("spin"),900); }
+  document.getElementById("weatherRefresh").addEventListener("click",()=>{ spinBtn("weatherRefresh"); fetchWeather(true); });
+  document.getElementById("cryptoRefresh").addEventListener("click",()=>{ spinBtn("cryptoRefresh"); fetchCrypto(true); });
+  document.getElementById("newsRefresh").addEventListener("click",()=>{ spinBtn("newsRefresh"); fetchNews(true); });
+  document.querySelectorAll(".news-tab").forEach(b=>{
+    b.addEventListener("click",()=>{
+      document.querySelectorAll(".news-tab").forEach(x=>{ x.classList.toggle("active",x===b); x.setAttribute("aria-selected",String(x===b)); });
+      const t=b.getAttribute("data-news-tab");
+      document.getElementById("newsHk").classList.toggle("active",t==="hk");
+      document.getElementById("newsWorld").classList.toggle("active",t==="world");
+    });
+  });
 
   /* ============ Init ============ */
   onHash();
