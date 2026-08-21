@@ -1491,24 +1491,17 @@ details[open] summary::before{transform:rotate(90deg)}
     try{
       if(!force){
         const c=JSON.parse(localStorage.getItem(key)||"null");
-        if(c && c.d && (Date.now()-c.t<60*1000)){ renderIndices(c.d); return; }
+        if(c && c.d && (Date.now()-c.t<10*60*1000)){ renderIndices(c.d); return; }
       }
-      const list=await Promise.all(INDICES.map(async idx=>{
-        const sym=encodeURIComponent(idx.s);
-        let j=null;
-        for(const host of ["query1.finance.yahoo.com","query2.finance.yahoo.com"]){
-          try{
-            const r=await fetch(`https://${host}/v8/finance/chart/${sym}?interval=1d&range=1d`);
-            if(r.ok){ j=await r.json(); if(j.chart && j.chart.result && j.chart.result[0]) break; }
-          }catch(e){}
-        }
-        if(!j || !j.chart || !j.chart.result || !j.chart.result[0]) return {s:idx.s,icon:idx.icon,name:idx.name,cls:idx.cls,p:null,ch:null};
-        const meta=j.chart.result[0].meta;
-        const p=meta.regularMarketPrice;
-        const prev=meta.chartPreviousClose || meta.previousClose;
-        const ch=(prev && p!=null) ? (p-prev)/prev*100 : null;
-        return {s:idx.s,icon:idx.icon,name:idx.name,cls:idx.cls,p,ch};
-      }));
+      // 讀同域 indices.json（由 GitHub Actions 定時更新，無 CORS 問題）
+      const r=await fetch("indices.json?ts="+Date.now());
+      if(!r.ok) throw new Error("http");
+      const j=await r.json();
+      const map=Object.fromEntries(INDICES.map(x=>[x.s,x]));
+      const list=(j.list||[]).map(it=>{
+        const m=map[it.s]||{icon:"—",cls:"hsi",name:it.name};
+        return {s:it.s,icon:m.icon,name:it.name||m.name,cls:m.cls,p:it.price,ch:it.ch};
+      });
       const d={list,ts:Date.now()};
       try{ localStorage.setItem(key,JSON.stringify({t:Date.now(),d})); }catch(e){}
       renderIndices(d);
