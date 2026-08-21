@@ -1,0 +1,1112 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1226">
+<meta name="description" content="MyHub">
+<title>MyHub</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+<meta property="og:title" content="MyHub">
+<meta property="og:image" content="assets/thumbnail.png">
+<meta property="og:type" content="website">
+<style>
+/* ============ Design Tokens (Dark Cyberpunk) ============ */
+:root{
+  --bg:#0e1226;
+  --bg-2:#141a32;
+  --surface:#1a2140;
+  --surface-2:#232b50;
+  --surface-3:#2e3766;
+  --border:#2f3a66;
+  --border-strong:#414d82;
+
+  --text:#e9eefb;
+  --text-strong:#ffffff;
+  --text-muted:#aab3d4;
+  --text-dim:#7c87ad;
+
+  --neon-cyan:#00f0ff;
+  --neon-magenta:#ff2e88;
+  --neon-violet:#a855f7;
+  --neon-lime:#a3ff12;
+  --neon-amber:#ffb13b;
+
+  --brand:var(--neon-cyan);
+  --brand-2:var(--neon-magenta);
+
+  --glow-cyan:0 0 10px rgba(0,240,255,.55),0 0 26px rgba(0,240,255,.22);
+  --glow-magenta:0 0 10px rgba(255,46,136,.55),0 0 26px rgba(255,46,136,.22);
+  --glow-soft:0 0 14px rgba(0,240,255,.25);
+
+  --radius-sm:8px;--radius:12px;--radius-lg:16px;--radius-xl:20px;--radius-2xl:28px;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--s8:32px;--s10:40px;--s12:48px;--s16:64px;
+  --font:"PingFang TC","PingFang HK","Microsoft JhengHei","Noto Sans TC","Heiti TC",
+    system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,"JetBrains Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  --fs-xs:13px;--fs-sm:14px;--fs-base:16px;--fs-lg:18px;--fs-xl:20px;
+  --fs-2xl:23px;--fs-3xl:29px;--fs-4xl:37px;--fs-5xl:50px;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --header-h:64px;--bottom-nav-h:64px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font);
+  font-size:var(--fs-base);
+  line-height:1.65;
+  color:var(--text);
+  background:var(--bg);
+  min-height:100vh;min-height:100dvh;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  position:relative;overflow-x:hidden;
+}
+/* Cyberpunk grid background */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,240,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,240,255,.05) 1px,transparent 1px);
+  background-size:48px 48px;
+  background-position:center top;
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 80%);
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 80%);
+}
+/* Faint magenta glow top */
+body::after{
+  content:"";position:fixed;left:50%;top:-200px;transform:translateX(-50%);
+  width:900px;height:500px;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse,rgba(255,46,136,.08),transparent 70%);
+  filter:blur(20px);
+}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+input,select,textarea{font:inherit;color:inherit}
+a{color:var(--neon-cyan);text-decoration:none}
+a:hover{text-shadow:var(--glow-cyan)}
+:focus-visible{outline:2px solid var(--neon-cyan);outline-offset:2px;border-radius:6px;box-shadow:var(--glow-cyan)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:8px;top:-40px;background:var(--neon-cyan);color:#0b0f22;padding:8px 14px;border-radius:8px;z-index:1000;font-weight:700;transition:top .2s var(--ease)}
+.skip-link:focus{top:8px}
+
+/* ============ Header ============ */
+.app-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(14,18,38,.78);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:max(env(safe-area-inset-top),8px) 16px 8px;
+  position:sticky;
+}
+.app-header::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,240,255,.5),transparent);
+}
+.brand{display:flex;align-items:center;gap:12px;min-height:48px}
+.brand .logo{
+  width:44px;height:44px;border-radius:12px;flex:none;
+  filter:drop-shadow(0 0 8px rgba(0,240,255,.4));
+}
+.brand-text h1{
+  margin:0;font-family:var(--font-mono);
+  font-size:var(--fs-xl);font-weight:700;letter-spacing:.14em;
+  color:var(--neon-cyan);
+  text-shadow:0 0 8px rgba(0,240,255,.7),0 0 18px rgba(0,240,255,.3);
+}
+.brand button{text-align:left;display:flex;align-items:center;gap:12px;border-radius:12px;padding:4px 6px;margin:-4px -6px;transition:background .2s var(--ease)}
+.brand button:hover{background:var(--surface-2)}
+
+/* ============ Top tabs (desktop) ============ */
+.top-tabs{
+  display:none;
+  background:rgba(20,26,50,.6);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:8px 16px;gap:4px;overflow-x:auto;scrollbar-width:none;
+}
+.top-tabs::-webkit-scrollbar{display:none}
+.top-tabs button{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:999px;
+  font-size:var(--fs-sm);font-weight:600;color:var(--text-muted);
+  font-family:var(--font-mono);letter-spacing:.04em;
+  white-space:nowrap;flex:none;transition:all .2s var(--ease);
+  border:1px solid transparent;
+}
+.top-tabs button:hover{color:var(--text);background:var(--surface-2)}
+.top-tabs button[aria-current="true"]{
+  color:var(--neon-cyan);
+  background:rgba(0,240,255,.08);
+  border-color:rgba(0,240,255,.45);
+  box-shadow:var(--glow-cyan),inset 0 0 12px rgba(0,240,255,.12);
+  text-shadow:0 0 8px rgba(0,240,255,.6);
+}
+.top-tabs .ti{width:16px;height:16px;flex:none}
+
+main{
+  position:relative;z-index:1;
+  padding:20px 16px calc(20px + var(--bottom-nav-h) + env(safe-area-inset-bottom)) 16px;
+  max-width:1100px;margin:0 auto;
+}
+
+/* ============ Views ============ */
+.view{display:none;animation:fade .25s var(--ease)}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ============ Home hero ============ */
+.hero{
+  text-align:center;padding:16px 0 28px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.hero-title{
+  font-family:var(--font-mono);
+  font-size:clamp(40px,11vw,72px);
+  font-weight:800;letter-spacing:.18em;
+  color:var(--neon-cyan);
+  text-shadow:0 0 14px rgba(0,240,255,.7),0 0 38px rgba(0,240,255,.35),0 0 70px rgba(0,240,255,.18);
+  line-height:1;
+}
+.hero-title .accent{color:var(--neon-magenta);text-shadow:0 0 14px rgba(255,46,136,.7),0 0 38px rgba(255,46,136,.3)}
+.hero-rule{
+  width:72px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--neon-cyan),transparent);
+  box-shadow:0 0 10px rgba(0,240,255,.7);
+}
+
+/* ============ Tool card grid ============ */
+.grid{
+  display:grid;gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+}
+.tool-card{
+  display:flex;flex-direction:column;align-items:flex-start;gap:14px;
+  padding:20px;border-radius:var(--radius-lg);
+  background:linear-gradient(180deg,var(--surface),var(--bg-2));
+  border:1px solid var(--border);
+  text-align:left;width:100%;
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease);
+  position:relative;overflow:hidden;
+}
+.tool-card::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 100% 0%,rgba(0,240,255,.08),transparent 60%);
+  opacity:0;transition:opacity .3s var(--ease);
+}
+.tool-card::after{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,240,255,.6),transparent);
+  opacity:0;transition:opacity .25s var(--ease);
+}
+.tool-card:hover{transform:translateY(-3px);border-color:rgba(0,240,255,.5);box-shadow:0 12px 30px -10px rgba(0,240,255,.25),0 0 0 1px rgba(0,240,255,.2)}
+.tool-card:hover::before{opacity:1}
+.tool-card:hover::after{opacity:1}
+.tool-card:active{transform:translateY(-1px) scale(.99)}
+.tc-icon{
+  width:72px;height:72px;border-radius:16px;display:block;
+  box-shadow:0 8px 24px -10px rgba(0,0,0,.6),0 0 18px rgba(0,240,255,.15);
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease);
+}
+.tool-card:hover .tc-icon{transform:scale(1.04);box-shadow:0 10px 28px -8px rgba(0,0,0,.7),0 0 28px rgba(0,240,255,.35)}
+.tc-title{font-size:var(--fs-lg);font-weight:700;margin:0;color:var(--text-strong);letter-spacing:.02em}
+.tc-arrow{
+  margin-top:auto;display:inline-flex;align-items:center;gap:6px;
+  color:var(--neon-cyan);font-weight:600;font-size:var(--fs-sm);
+  font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;
+}
+.tc-arrow svg{width:16px;height:16px;transition:transform .2s var(--ease);filter:drop-shadow(0 0 6px rgba(0,240,255,.6))}
+.tool-card:hover .tc-arrow svg{transform:translateX(4px)}
+
+/* ============ Tool common ============ */
+.tool-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.tool-head h2{
+  margin:0;font-size:var(--fs-2xl);font-weight:800;letter-spacing:.02em;
+  display:flex;align-items:center;gap:10px;color:var(--text-strong);
+  font-family:var(--font-mono);
+}
+.tool-head h2 .ti{width:32px;height:32px;border-radius:8px;object-fit:cover}
+.panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:16px;position:relative;
+}
+.panel::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,240,255,.35),transparent);
+  border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+}
+.panel + .panel{margin-top:14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--text-muted);font-size:var(--fs-sm)}
+.kbd{font-family:var(--font-mono);font-size:.92em;background:var(--surface-2);padding:1px 6px;border-radius:6px;border:1px solid var(--border);color:var(--neon-cyan)}
+
+textarea,input[type="text"],input[type="number"],select{
+  width:100%;padding:12px 14px;border-radius:var(--radius);
+  border:1.5px solid var(--border);background:var(--bg-2);
+  color:var(--text);font-size:var(--fs-base);
+  transition:border-color .2s var(--ease),box-shadow .2s var(--ease),background .2s var(--ease);
+  min-height:0;
+  font-family:var(--font);
+}
+textarea::placeholder,input::placeholder{color:var(--text-dim)}
+textarea{resize:vertical;min-height:120px;line-height:1.6}
+textarea:focus,input:focus,select:focus{
+  outline:none;border-color:var(--neon-cyan);
+  box-shadow:0 0 0 3px rgba(0,240,255,.18),inset 0 0 12px rgba(0,240,255,.04);
+  background:var(--surface);
+}
+select{
+  appearance:none;-webkit-appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--neon-cyan) 50%),linear-gradient(135deg,var(--neon-cyan) 50%,transparent 50%);
+  background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;
+  background-size:5px 5px,5px 5px;
+  background-repeat:no-repeat;
+  padding-right:34px;
+}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 16px;border-radius:var(--radius);font-weight:700;font-size:var(--fs-sm);
+  background:var(--neon-cyan);color:#0b0f22;
+  font-family:var(--font-mono);letter-spacing:.06em;
+  transition:transform .15s var(--ease),box-shadow .2s var(--ease),background .2s var(--ease);
+  border:1px solid var(--neon-cyan);min-height:40px;
+  box-shadow:0 0 14px rgba(0,240,255,.25);
+}
+.btn:hover{background:#4dffff;box-shadow:var(--glow-cyan)}
+.btn:active{transform:scale(.96)}
+.btn-ghost{background:transparent;color:var(--neon-cyan);border-color:rgba(0,240,255,.5);box-shadow:none}
+.btn-ghost:hover{background:rgba(0,240,255,.08);color:var(--neon-cyan);box-shadow:var(--glow-cyan)}
+.btn-icon{
+  width:40px;height:40px;padding:0;border-radius:12px;
+  background:var(--surface-2);color:var(--text-muted);
+  border:1px solid var(--border);
+}
+.btn-icon:hover{background:var(--surface-3);color:var(--neon-cyan);border-color:rgba(0,240,255,.4);box-shadow:0 0 12px rgba(0,240,255,.2)}
+
+/* ============ Cangjie ============ */
+.cj-results{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));margin-top:14px}
+.cj-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px;display:flex;flex-direction:column;gap:8px;
+  transition:transform .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease);
+}
+.cj-card:hover{transform:translateY(-2px);border-color:rgba(0,240,255,.4);box-shadow:0 0 18px rgba(0,240,255,.12)}
+.cj-char{
+  font-size:40px;font-weight:600;line-height:1;text-align:center;
+  padding:8px 0;color:var(--text-strong);
+  font-feature-settings:"tnum";
+}
+.cj-meta{display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);color:var(--text-muted)}
+.cj-chips{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.cj-chip{
+  min-width:36px;min-height:44px;padding:5px 7px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  border-radius:10px;color:#fff;font-weight:700;
+  box-shadow:0 2px 6px rgba(0,0,0,.5);
+}
+.cj-root{font-family:var(--font);font-size:18px;line-height:1;font-weight:800}
+.cj-sub{font-family:var(--font-mono);font-size:10px;line-height:1;opacity:.7;letter-spacing:.05em}
+.cj-code{font-family:var(--font);font-weight:700;color:var(--text)}
+.cj-code-sub{font-family:var(--font-mono);font-size:11px;opacity:.55;margin-left:5px;letter-spacing:.04em}
+.cj-chip.miss{background:var(--surface-3)!important;color:var(--text-dim);box-shadow:none;border:1px solid var(--border)}
+.cj-letter-ref{
+  margin-top:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;
+  font-size:var(--fs-xs);
+}
+.cj-letter-ref div{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border)}
+.cj-letter-ref .lc{
+  width:18px;height:18px;border-radius:5px;display:grid;place-items:center;
+  color:#fff;font-family:var(--font-mono);font-weight:700;font-size:12px;
+}
+details summary{cursor:pointer;color:var(--neon-cyan);font-size:var(--fs-sm);padding:6px 0;list-style:none;font-family:var(--font-mono);letter-spacing:.04em}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";transition:transform .2s var(--ease);display:inline-block}
+details[open] summary::before{transform:rotate(90deg)}
+
+/* ============ Convert ============ */
+.seg{
+  display:inline-flex;background:var(--surface-2);border-radius:999px;padding:4px;gap:2px;
+  border:1px solid var(--border);
+}
+.seg button{
+  padding:8px 16px;border-radius:999px;font-size:var(--fs-sm);font-weight:600;
+  color:var(--text-muted);transition:all .2s var(--ease);
+  font-family:var(--font-mono);letter-spacing:.04em;
+}
+.seg button[aria-pressed="true"]{
+  background:var(--neon-cyan);color:#0b0f22;
+  box-shadow:0 0 14px rgba(0,240,255,.4);
+}
+.convert-grid{display:grid;gap:14px;margin-top:14px}
+.convert-grid .label{font-size:var(--fs-sm);font-weight:600;color:var(--text-muted);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);letter-spacing:.04em}
+.copy-btn{font-size:var(--fs-xs);color:var(--neon-cyan);font-weight:700;padding:4px 8px;border-radius:6px;font-family:var(--font-mono)}
+.copy-btn:hover{background:rgba(0,240,255,.1)}
+
+/* ============ Currency ============ */
+.cur-grid{display:grid;gap:10px;grid-template-columns:1fr;margin-top:12px}
+.cur-input-row{display:grid;gap:8px;grid-template-columns:1fr auto 1fr;align-items:end}
+.cur-result{
+  margin-top:14px;padding:18px;border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(0,240,255,.06),rgba(168,85,247,.06));
+  border:1px solid rgba(0,240,255,.3);
+  box-shadow:inset 0 0 30px rgba(0,240,255,.06),0 0 20px rgba(0,240,255,.08);
+  position:relative;
+}
+.cur-result::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--neon-cyan);box-shadow:0 0 10px var(--neon-cyan);border-radius:2px;
+}
+.cur-result .num{
+  font-size:var(--fs-3xl);font-weight:800;letter-spacing:-.01em;
+  color:var(--neon-cyan);word-break:break-all;
+  font-family:var(--font-mono);
+  text-shadow:0 0 12px rgba(0,240,255,.5);
+}
+.cur-result .label{font-size:var(--fs-sm);color:var(--text-muted);margin-top:6px;font-family:var(--font-mono);letter-spacing:.04em}
+.cur-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:var(--fs-xs);color:var(--text-muted);margin-top:10px}
+.cur-meta .pill{
+  padding:3px 10px;border-radius:999px;
+  font-family:var(--font-mono);font-weight:700;letter-spacing:.04em;
+}
+.cur-meta .pill.live{background:rgba(163,255,18,.12);color:var(--neon-lime);border:1px solid rgba(163,255,18,.3)}
+.cur-meta .pill.offline{background:rgba(255,177,59,.1);color:var(--neon-amber);border:1px solid rgba(255,177,59,.3)}
+
+/* ============ Unit ============ */
+.cat-row{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.cat-row::-webkit-scrollbar{display:none}
+.cat-row button{
+  padding:7px 14px;border-radius:999px;font-size:var(--fs-sm);font-weight:600;
+  background:var(--surface-2);color:var(--text-muted);flex:none;
+  transition:all .2s var(--ease);
+  font-family:var(--font-mono);letter-spacing:.04em;
+  border:1px solid var(--border);
+}
+.cat-row button:hover{color:var(--text);border-color:var(--border-strong)}
+.cat-row button[aria-pressed="true"]{
+  background:rgba(0,240,255,.1);color:var(--neon-cyan);border-color:rgba(0,240,255,.4);
+  box-shadow:0 0 12px rgba(0,240,255,.2);
+}
+.unit-row{display:grid;gap:8px;grid-template-columns:1fr auto 1fr;align-items:end;margin-top:8px}
+.unit-result{
+  margin-top:14px;padding:14px;border-radius:var(--radius);
+  background:var(--surface-2);text-align:center;
+  border:1px solid var(--border);
+  font-family:var(--font-mono);
+}
+.unit-result .num{font-size:var(--fs-2xl);font-weight:700;color:var(--neon-cyan);text-shadow:0 0 10px rgba(0,240,255,.4)}
+.unit-result .label{font-size:var(--fs-sm);color:var(--text-muted);margin-top:2px}
+
+/* ============ Bottom nav (mobile) ============ */
+.bottom-nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:rgba(14,18,38,.85);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+}
+.bottom-nav::before{
+  content:"";position:absolute;left:0;right:0;top:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,240,255,.5),transparent);
+}
+.bottom-nav button{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px;border-radius:12px;color:var(--text-muted);
+  font-size:11px;font-weight:600;min-height:48px;
+  transition:color .2s var(--ease);
+  font-family:var(--font-mono);letter-spacing:.04em;
+}
+.bottom-nav button .ti{width:22px;height:22px}
+.bottom-nav button[aria-current="true"]{
+  color:var(--neon-cyan);
+  text-shadow:0 0 8px rgba(0,240,255,.6);
+}
+.bottom-nav button[aria-current="true"] .ti{
+  filter:drop-shadow(0 0 6px rgba(0,240,255,.7));
+}
+
+/* ============ Toast ============ */
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--bottom-nav-h) + 24px);
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(13,13,30,.95);color:var(--neon-cyan);padding:10px 18px;border-radius:999px;
+  font-size:var(--fs-sm);font-weight:600;
+  font-family:var(--font-mono);letter-spacing:.04em;
+  border:1px solid rgba(0,240,255,.35);
+  box-shadow:var(--glow-cyan);
+  opacity:0;pointer-events:none;transition:all .25s var(--ease);
+  z-index:100;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ============ Responsive ============ */
+@media (min-width:768px){
+  .top-tabs{display:flex;position:sticky;top:var(--header-h);z-index:49}
+  .bottom-nav{display:none}
+  main{padding-bottom:40px}
+  .hero{padding:24px 0 40px}
+  .tc-icon{width:80px;height:80px}
+}
+@media (min-width:1024px){
+  .app-header{padding-top:max(env(safe-area-inset-top),12px)}
+  .brand .logo{width:52px;height:52px}
+  .brand-text h1{font-size:var(--fs-2xl)}
+  main{padding-top:32px}
+  .hero{padding:40px 0 56px}
+  .hero-title{font-size:80px}
+  .tc-icon{width:88px;height:88px}
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主內容</a>
+
+<header class="app-header">
+  <div class="brand">
+    <button type="button" data-goto="home" aria-label="回到首頁">
+      <img src="assets/logo.png" alt="" class="logo">
+      <div class="brand-text">
+        <h1>MyHub</h1>
+      </div>
+    </button>
+  </div>
+</header>
+
+<nav class="top-tabs" id="topTabs" aria-label="工具切換">
+  <button data-goto="cangjie" aria-current="true">
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/></svg>
+    倉頡
+  </button>
+  <button data-goto="convert">
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4"/><path d="M21 7H3"/><path d="M7 21l-4-4 4-4"/><path d="M3 17h18"/></svg>
+    繁簡
+  </button>
+  <button data-goto="currency">
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h6a3 3 0 1 1 0 6H8a3 3 0 1 0 0 6h7"/><path d="M12 5v2M12 17v2"/></svg>
+    貨幣
+  </button>
+  <button data-goto="unit">
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+    單位
+  </button>
+</nav>
+
+<main id="main">
+
+  <!-- ============ Home ============ -->
+  <section id="view-home" class="view active" aria-label="首頁">
+    <div class="hero">
+      <div class="hero-title">My<span class="accent">Hub</span></div>
+      <div class="hero-rule"></div>
+    </div>
+    <div class="grid">
+      <button class="tool-card" data-goto="cangjie">
+        <img class="tc-icon" src="assets/icon-cangjie.png" alt="">
+        <h3 class="tc-title">倉頡碼</h3>
+        <span class="tc-arrow">OPEN <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </button>
+      <button class="tool-card" data-goto="convert">
+        <img class="tc-icon" src="assets/icon-convert.png" alt="">
+        <h3 class="tc-title">繁簡轉換</h3>
+        <span class="tc-arrow">OPEN <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </button>
+      <button class="tool-card" data-goto="currency">
+        <img class="tc-icon" src="assets/icon-currency.png" alt="">
+        <h3 class="tc-title">貨幣轉換</h3>
+        <span class="tc-arrow">OPEN <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </button>
+      <button class="tool-card" data-goto="unit">
+        <img class="tc-icon" src="assets/icon-unit.png" alt="">
+        <h3 class="tc-title">單位轉換</h3>
+        <span class="tc-arrow">OPEN <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ Cangjie ============ -->
+  <section id="view-cangjie" class="view" aria-label="倉頡碼查詢">
+    <div class="tool-head">
+      <h2><img class="ti" src="assets/icon-cangjie.png" alt="">倉頡碼</h2>
+    </div>
+    <div class="panel">
+      <textarea id="cjInput" placeholder="輸入或貼上中文字" aria-label="查詢輸入"></textarea>
+      <div class="row" style="margin-top:10px;justify-content:space-between">
+        <div class="muted"><span id="cjCount">0</span> 個不重複字</div>
+        <div class="row">
+          <button class="btn-ghost btn" id="cjClear">CLEAR</button>
+          <button class="btn" id="cjCopyAll">COPY ALL</button>
+        </div>
+      </div>
+    </div>
+    <div id="cjResults" class="cj-results" aria-live="polite"></div>
+    <details class="panel" style="margin-top:14px">
+      <summary>24 個倉頡字母</summary>
+      <div id="cjLetterRef" class="cj-letter-ref" style="margin-top:10px"></div>
+    </details>
+  </section>
+
+  <!-- ============ Convert ============ -->
+  <section id="view-convert" class="view" aria-label="繁簡轉換">
+    <div class="tool-head">
+      <h2><img class="ti" src="assets/icon-convert.png" alt="">繁簡轉換</h2>
+    </div>
+    <div class="panel">
+      <div class="row" style="justify-content:space-between">
+        <div class="seg" role="tablist" aria-label="轉換方向">
+          <button data-dir="t2s" aria-pressed="true">繁 → 簡</button>
+          <button data-dir="s2t" aria-pressed="false">簡 → 繁</button>
+        </div>
+        <button class="btn-icon" id="cvSwap" title="對調" aria-label="對調">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4M7 4l-3 3M7 4l3 3M17 8v12M17 20l-3-3M17 20l3-3"/></svg>
+        </button>
+      </div>
+      <div class="convert-grid">
+        <div>
+          <div class="label"><span>INPUT <span class="muted" id="cvInCount">0 字</span></span></div>
+          <textarea id="cvInput" placeholder="貼上要轉換的文字..."></textarea>
+        </div>
+        <div>
+          <div class="label"><span>OUTPUT <span class="muted" id="cvOutCount">0 字</span></span><button class="copy-btn" id="cvCopy">COPY</button></div>
+          <textarea id="cvOutput" readonly placeholder="轉換結果"></textarea>
+        </div>
+      </div>
+      <div class="muted" id="cvStatus" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <!-- ============ Currency ============ -->
+  <section id="view-currency" class="view" aria-label="貨幣轉換">
+    <div class="tool-head">
+      <h2><img class="ti" src="assets/icon-currency.png" alt="">貨幣轉換</h2>
+    </div>
+    <div class="panel">
+      <div class="cur-grid">
+        <div>
+          <div class="label muted" style="margin-bottom:6px;font-size:var(--fs-sm)">AMOUNT</div>
+          <input type="number" id="curAmount" value="100" inputmode="decimal">
+        </div>
+        <div class="cur-input-row">
+          <div>
+            <div class="label muted" style="margin-bottom:6px;font-size:var(--fs-sm)">FROM</div>
+            <select id="curFrom"></select>
+          </div>
+          <button class="btn-icon" id="curSwap" title="對調" aria-label="對調貨幣">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4M7 4l-3 3M7 4l3 3M17 8v12M17 20l-3-3M17 20l3-3"/></svg>
+          </button>
+          <div>
+            <div class="label muted" style="margin-bottom:6px;font-size:var(--fs-sm)">TO</div>
+            <select id="curTo"></select>
+          </div>
+        </div>
+      </div>
+      <div class="cur-result">
+        <div class="num" id="curResult">—</div>
+        <div class="label" id="curResultLabel">輸入金額開始換算</div>
+      </div>
+      <div class="cur-meta">
+        <span id="curStatus" class="pill offline">OFFLINE</span>
+        <span class="muted" id="curUpdated"></span>
+        <button class="btn-ghost btn" id="curRefresh" style="min-height:36px;padding:6px 12px;font-size:var(--fs-xs)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16"/><path d="M3 21v-5h5"/></svg>
+          REFRESH
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Unit ============ -->
+  <section id="view-unit" class="view" aria-label="單位轉換">
+    <div class="tool-head">
+      <h2><img class="ti" src="assets/icon-unit.png" alt="">單位轉換</h2>
+    </div>
+    <div class="panel">
+      <div class="cat-row" id="unitCats" role="tablist" aria-label="類別"></div>
+      <div class="unit-row">
+        <div>
+          <div class="label muted" style="margin-bottom:6px;font-size:var(--fs-sm)">FROM</div>
+          <div class="row" style="gap:6px">
+            <input type="number" id="unitAmount" value="1" inputmode="decimal" style="flex:1">
+            <select id="unitFrom" style="flex:1"></select>
+          </div>
+        </div>
+        <button class="btn-icon" id="unitSwap" title="對調" aria-label="對調單位">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4M7 4l-3 3M7 4l3 3M17 8v12M17 20l-3-3M17 20l3-3"/></svg>
+        </button>
+        <div>
+          <div class="label muted" style="margin-bottom:6px;font-size:var(--fs-sm)">TO</div>
+          <div class="row" style="gap:6px">
+            <input type="text" id="unitResult" readonly style="flex:1;background:var(--surface-2)">
+            <select id="unitTo" style="flex:1"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav" id="bottomNav" aria-label="工具導航">
+  <button data-goto="cangjie" aria-current="true">
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/></svg>
+    <span>倉頡</span>
+  </button>
+  <button data-goto="convert">
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4"/><path d="M21 7H3"/><path d="M7 21l-4-4 4-4"/><path d="M3 17h18"/></svg>
+    <span>繁簡</span>
+  </button>
+  <button data-goto="currency">
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h6a3 3 0 1 1 0 6H8a3 3 0 1 0 0 6h7"/><path d="M12 5v2M12 17v2"/></svg>
+    <span>貨幣</span>
+  </button>
+  <button data-goto="unit">
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+    <span>單位</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="cangjie-data.js" defer></script>
+<script>
+/* ============ App ============ */
+(function(){
+  "use strict";
+
+  /* ---- Routing (hash) ---- */
+  const VIEWS=["home","cangjie","convert","currency","unit"];
+  function goto(name){
+    if(!VIEWS.includes(name)) name="home";
+    if(location.hash!=="#"+name) location.hash=name;
+    VIEWS.forEach(v=>{
+      const el=document.getElementById("view-"+v);
+      if(el) el.classList.toggle("active",v===name);
+    });
+    document.querySelectorAll('[data-goto]').forEach(b=>{
+      b.setAttribute("aria-current", b.getAttribute("data-goto")===name ? "true" : "false");
+    });
+    if(name==="cangjie") cjRefresh();
+    if(name==="convert") cvRefresh();
+    if(name==="currency") curRefresh(false);
+    window.scrollTo({top:0,behavior:"instant" in window?"instant":"auto"});
+  }
+  function onHash(){ goto((location.hash||"#home").slice(1)); }
+  document.body.addEventListener("click",e=>{
+    const t=e.target.closest("[data-goto]");
+    if(t){ e.preventDefault(); goto(t.getAttribute("data-goto")); }
+  });
+  window.addEventListener("hashchange",onHash);
+
+  /* ---- Toast ---- */
+  const toastEl=document.getElementById("toast");
+  let toastTimer;
+  function toast(msg){
+    toastEl.textContent=msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>toastEl.classList.remove("show"),1800);
+  }
+  async function copyText(txt){
+    try{ await navigator.clipboard.writeText(txt); toast("已複製"); }
+    catch{ const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove(); toast("已複製"); }
+  }
+
+  /* ============ Cangjie ============ */
+  const CJ_LETTERS=[
+    "a","b","c","d","e","f","g","h","i","j","k","l","m",
+    "n","o","p","q","r","s","t","u","v","w","y"
+  ];
+  const CJ_LABEL={
+    a:"日",b:"月",c:"金",d:"木",e:"水",f:"火",g:"土",
+    h:"竹",i:"戈",j:"十",k:"大",l:"中",m:"一",n:"弓",
+    o:"人",p:"心",q:"手",r:"口",s:"尸",t:"廿",u:"山",
+    v:"女",w:"田",y:"卜",x:"難",z:"重"
+  };
+  const cjKeys=Object.keys(CJ_LABEL);
+  function cjColor(letter){
+    const i=cjKeys.indexOf(letter);
+    if(i<0) return "#94A3B8";
+    const hue=Math.round(i*(360/cjKeys.length));
+    return `hsl(${hue} 70% 50%)`;
+  }
+  const cjInput=document.getElementById("cjInput");
+  const cjResults=document.getElementById("cjResults");
+  const cjCount=document.getElementById("cjCount");
+  const cjLetterRef=document.getElementById("cjLetterRef");
+  CJ_LETTERS.concat(["x","z"]).forEach(L=>{
+    const d=document.createElement("div");
+    d.innerHTML=`<span class="lc" style="background:${cjColor(L)}">${L.toUpperCase()}</span><span>${CJ_LABEL[L]||""}</span>`;
+    cjLetterRef.appendChild(d);
+  });
+
+  function cjRender(){
+    const text=cjInput.value||"";
+    const arr=Array.from(text);
+    const map=new Map();
+    arr.forEach(ch=>map.set(ch,(map.get(ch)||0)+1));
+    const items=Array.from(map.entries());
+    cjCount.textContent=items.length;
+    cjResults.innerHTML="";
+    if(items.length===0){
+      cjResults.innerHTML='<div class="muted" style="grid-column:1/-1;text-align:center;padding:24px 0">輸入文字後會顯示對應的倉頡碼</div>';
+      return;
+    }
+    if(!window.CANGJIE){
+      cjResults.innerHTML='<div class="muted" style="grid-column:1/-1;text-align:center;padding:24px 0">倉頡資料載入中…</div>';
+      return;
+    }
+    items.forEach(([ch,n])=>{
+      const code=window.CANGJIE[ch];
+      const card=document.createElement("div");
+      card.className="cj-card";
+      if(!code){
+        card.innerHTML=`<div class="cj-char">${escapeHtml(ch)}</div><div class="cj-chips"><span class="cj-chip miss">—</span></div><div class="cj-meta"><span>未收錄</span><span>×${n}</span></div>`;
+      } else {
+        const chips=code.split("").map(L=>{
+          const label=CJ_LABEL[L]||L.toUpperCase();
+          return `<span class="cj-chip" style="background:${cjColor(L)}"><span class="cj-root">${label}</span><span class="cj-sub">${L.toUpperCase()}</span></span>`;
+        }).join("");
+        const rootStr=code.split("").map(L=>CJ_LABEL[L]||L.toUpperCase()).join("");
+        card.innerHTML=`<div class="cj-char">${escapeHtml(ch)}</div><div class="cj-chips">${chips}</div><div class="cj-meta"><span class="cj-code">${rootStr}<span class="cj-code-sub">${code.toUpperCase()}</span></span><span>×${n}</span></div>`;
+      }
+      cjResults.appendChild(card);
+    });
+  }
+  let cjTimer;
+  function cjRefresh(){
+    clearTimeout(cjTimer);
+    cjTimer=setTimeout(cjRender,80);
+  }
+  cjInput.addEventListener("input",cjRefresh);
+  document.getElementById("cjClear").addEventListener("click",()=>{cjInput.value="";cjRefresh();cjInput.focus();});
+  document.getElementById("cjCopyAll").addEventListener("click",()=>{
+    const text=cjInput.value||"";
+    if(!text){toast("請先輸入文字");return;}
+    const arr=Array.from(text);
+    const map=new Map();
+    arr.forEach(ch=>map.set(ch,(map.get(ch)||0)+1));
+    const lines=Array.from(map.entries()).map(([ch,n])=>{
+      const code=window.CANGJIE?.[ch]||"—";
+      const root=code==="—"?"—":code.split("").map(L=>CJ_LABEL[L]||L.toUpperCase()).join("");
+      return `${ch}  ${root}（${code.toUpperCase()}）  ×${n}`;
+    });
+    copyText(lines.join("\n"));
+  });
+  function cjEnsureReady(){
+    if(!window.CANGJIE){
+      cjResults.innerHTML='<div class="muted" style="grid-column:1/-1;text-align:center;padding:24px 0">倉頡資料載入中，請稍候…</div>';
+    } else {
+      cjRefresh();
+    }
+  }
+  const _cjRefresh=cjRefresh;
+  window._cjEnsureReady=cjEnsureReady;
+
+  /* ============ Convert (OpenCC) ============ */
+  let t2s=null,s2t=null,openccDir="t2s";
+  function ensureOpenCC(){
+    if(window.OpenCC) return Promise.resolve();
+    return new Promise((res,rej)=>{
+      const s=document.createElement("script");
+      s.src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js";
+      s.onload=res;
+      s.onerror=()=>rej(new Error("OpenCC 載入失敗"));
+      document.head.appendChild(s);
+    });
+  }
+  async function getConv(dir){
+    await ensureOpenCC();
+    if(dir==="t2s" && !t2s) t2s=await OpenCC.Converter("t2s");
+    if(dir==="s2t" && !s2t) s2t=await OpenCC.Converter("s2t");
+    return dir==="t2s"?t2s:s2t;
+  }
+  const cvInput=document.getElementById("cvInput");
+  const cvOutput=document.getElementById("cvOutput");
+  const cvInCount=document.getElementById("cvInCount");
+  const cvOutCount=document.getElementById("cvOutCount");
+  const cvStatus=document.getElementById("cvStatus");
+  document.querySelectorAll(".seg button[data-dir]").forEach(b=>{
+    b.addEventListener("click",()=>{
+      document.querySelectorAll(".seg button[data-dir]").forEach(x=>x.setAttribute("aria-pressed","false"));
+      b.setAttribute("aria-pressed","true");
+      openccDir=b.getAttribute("data-dir");
+      cvDo();
+    });
+  });
+  document.getElementById("cvSwap").addEventListener("click",()=>{
+    cvOutput.value=cvInput.value;
+    cvInput.value="";
+    const cur=openccDir;
+    openccDir=cur==="t2s"?"s2t":"t2s";
+    document.querySelectorAll(".seg button[data-dir]").forEach(b=>{
+      b.setAttribute("aria-pressed", b.getAttribute("data-dir")===openccDir?"true":"false");
+    });
+    cvDo();
+  });
+  document.getElementById("cvCopy").addEventListener("click",()=>{
+    if(!cvOutput.value){toast("冇內容可複製");return;}
+    copyText(cvOutput.value);
+  });
+  let cvTimer;
+  async function cvDo(){
+    const t=cvInput.value;
+    cvInCount.textContent=`${Array.from(t).length} 字`;
+    if(!t){ cvOutput.value=""; cvOutCount.textContent="0 字"; return; }
+    cvStatus.textContent="轉換中…";
+    try{
+      const cnv=await getConv(openccDir);
+      const out=cnv(t);
+      cvOutput.value=out;
+      cvOutCount.textContent=`${Array.from(out).length} 字`;
+      cvStatus.textContent=`已完成 · ${openccDir==="t2s"?"繁→簡":"簡→繁"}`;
+    }catch(err){
+      cvStatus.textContent="OpenCC 載入失敗，請連線至網絡後重試。";
+    }
+  }
+  function cvRefresh(){
+    clearTimeout(cvTimer);
+    cvTimer=setTimeout(cvDo,200);
+  }
+  cvInput.addEventListener("input",cvRefresh);
+
+  /* ============ Currency ============ */
+  const CURRENCIES=[
+    {code:"HKD",name:"港幣",flag:"🇭🇰"},
+    {code:"USD",name:"美元",flag:"🇺🇸"},
+    {code:"CNY",name:"人民幣",flag:"🇨🇳"},
+    {code:"TWD",name:"新台幣",flag:"🇹🇼"},
+    {code:"JPY",name:"日圓",flag:"🇯🇵"},
+    {code:"KRW",name:"韓圜",flag:"🇰🇷"},
+    {code:"EUR",name:"歐羅",flag:"🇪🇺"},
+    {code:"GBP",name:"英鎊",flag:"🇬🇧"},
+    {code:"AUD",name:"澳元",flag:"🇦🇺"},
+    {code:"CAD",name:"加元",flag:"🇨🇦"},
+    {code:"SGD",name:"坡幣",flag:"🇸🇬"},
+    {code:"MYR",name:"馬幣",flag:"🇲🇾"},
+    {code:"THB",name:"泰銖",flag:"🇹🇭"},
+    {code:"IDR",name:"印尼盾",flag:"🇮🇩"},
+    {code:"PHP",name:"披索",flag:"🇵🇭"},
+    {code:"VND",name:"越南盾",flag:"🇻🇳"},
+    {code:"INR",name:"印度盧比",flag:"🇮🇳"},
+    {code:"NZD",name:"紐元",flag:"🇳🇿"},
+    {code:"CHF",name:"瑞郎",flag:"🇨🇭"},
+    {code:"AED",name:"迪拉姆",flag:"🇦🇪"},
+    {code:"SEK",name:"瑞典克朗",flag:"🇸🇪"},
+    {code:"MXN",name:"墨西哥披索",flag:"🇲🇽"},
+  ];
+  const FALLBACK_RATES={
+    USD:1,HKD:7.8,CNY:7.1,TWD:32,JPY:155,KRW:1380,EUR:0.92,GBP:0.78,
+    AUD:1.5,CAD:1.36,SGD:1.34,MYR:4.7,THB:36,IDR:16000,PHP:56,VND:25000,
+    INR:83,NZD:1.65,CHF:0.88,AED:3.67,SEK:10.5,MXN:17.2
+  };
+  const curFrom=document.getElementById("curFrom");
+  const curTo=document.getElementById("curTo");
+  const curAmount=document.getElementById("curAmount");
+  const curResult=document.getElementById("curResult");
+  const curResultLabel=document.getElementById("curResultLabel");
+  const curStatus=document.getElementById("curStatus");
+  const curUpdated=document.getElementById("curUpdated");
+  CURRENCIES.forEach(c=>{
+    const o1=document.createElement("option");o1.value=c.code;o1.textContent=`${c.flag} ${c.code} · ${c.name}`;
+    const o2=o1.cloneNode(true);
+    curFrom.appendChild(o1);curTo.appendChild(o2);
+  });
+  curFrom.value="HKD";curTo.value="USD";
+  function getRates(){
+    try{
+      const cached=JSON.parse(localStorage.getItem("myhub_rates")||"null");
+      if(cached && cached.rates) return {...FALLBACK_RATES, ...cached.rates, _live:true, _ts:cached.ts, _source:"live"};
+    }catch(e){}
+    return {...FALLBACK_RATES, _live:false, _ts:Date.now(), _source:"fallback"};
+  }
+  function setStatus(online,ts){
+    if(online){
+      curStatus.textContent="ONLINE";
+      curStatus.className="pill live";
+      const d=new Date(ts);
+      curUpdated.textContent=`更新於 ${d.toLocaleString("zh-Hant")}`;
+    } else {
+      curStatus.textContent="OFFLINE";
+      curStatus.className="pill offline";
+      curUpdated.textContent="使用內建備援匯率（可能略有誤差）";
+    }
+  }
+  async function fetchRates(force){
+    const cached=getRates();
+    setStatus(cached._live, cached._ts);
+    curDo();
+    if(!force && cached._live && Date.now()-cached._ts < 6*3600*1000) return;
+    try{
+      const res=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      const j=await res.json();
+      if(j.result==="success" && j.rates){
+        localStorage.setItem("myhub_rates", JSON.stringify({rates:j.rates, ts:Date.now()}));
+        setStatus(true, Date.now());
+        curDo();
+      }
+    }catch(e){
+      if(!cached._live){ setStatus(false, Date.now()); }
+    }
+  }
+  function curConvert(amount,from,to,rates){
+    if(!rates[from] || !rates[to]) return null;
+    const usd=amount / rates[from];
+    return usd * rates[to];
+  }
+  function fmt(n){
+    if(n===null) return "—";
+    if(Math.abs(n)>=1) return n.toLocaleString("en-US",{maximumFractionDigits:4});
+    return n.toLocaleString("en-US",{maximumFractionDigits:6});
+  }
+  function curDo(){
+    const a=parseFloat(curAmount.value);
+    const f=curFrom.value, t=curTo.value;
+    if(isNaN(a)){ curResult.textContent="—"; curResultLabel.textContent="請輸入金額"; return; }
+    const r=getRates();
+    const v=curConvert(a,f,t,r);
+    const fc=CURRENCIES.find(x=>x.code===f), tc=CURRENCIES.find(x=>x.code===t);
+    curResult.textContent=fmt(v)+" "+t;
+    curResultLabel.textContent=`${fmt(a)} ${f} ${fc?fc.name:""} ≈ ${fmt(v)} ${t} ${tc?tc.name:""}`;
+  }
+  function curRefresh(force){ fetchRates(!!force); }
+  curFrom.addEventListener("change",curDo);
+  curTo.addEventListener("change",curDo);
+  curAmount.addEventListener("input",curDo);
+  document.getElementById("curSwap").addEventListener("click",()=>{
+    const a=curFrom.value; curFrom.value=curTo.value; curTo.value=a; curDo();
+  });
+  document.getElementById("curRefresh").addEventListener("click",()=>{ curRefresh(true); toast("更新中…"); });
+
+  /* ============ Unit ============ */
+  const UNITS={
+    length:{name:"長度",base:"m",list:[
+      {k:"mm",n:"毫米",f:0.001},{k:"cm",n:"厘米",f:0.01},{k:"m",n:"米",f:1},
+      {k:"km",n:"公里",f:1000},{k:"in",n:"英寸",f:0.0254},{k:"ft",n:"英尺",f:0.3048},
+      {k:"yd",n:"碼",f:0.9144},{k:"mi",n:"英里",f:1609.344},{k:"nmi",n:"海里",f:1852}
+    ]},
+    mass:{name:"重量",base:"g",list:[
+      {k:"mg",n:"毫克",f:0.001},{k:"g",n:"克",f:1},{k:"kg",n:"公斤",f:1000},
+      {k:"t",n:"公噸",f:1e6},{k:"oz",n:"盎司",f:28.3495},
+      {k:"lb",n:"磅",f:453.592},{k:"st",n:"英石",f:6350.29}
+    ]},
+    temperature:{name:"溫度",base:"C",list:[
+      {k:"C",n:"攝氏 °C",to:(c)=>c,from:(v)=>v},
+      {k:"F",n:"華氏 °F",to:(c)=>c*9/5+32,from:(v)=>(v-32)*5/9},
+      {k:"K",n:"克氏 K",to:(c)=>c+273.15,from:(v)=>v-273.15}
+    ]},
+    area:{name:"面積",base:"m2",list:[
+      {k:"mm2",n:"平方毫米",f:1e-6},{k:"cm2",n:"平方厘米",f:1e-4},
+      {k:"m2",n:"平方米",f:1},{k:"km2",n:"平方公里",f:1e6},
+      {k:"ha",n:"公頃",f:1e4},{k:"acre",n:"英畝",f:4046.8564224},
+      {k:"ft2",n:"平方呎",f:0.09290304},{k:"ping",n:"坪",f:3.305785}
+    ]},
+    volume:{name:"體積",base:"L",list:[
+      {k:"mL",n:"毫升",f:0.001},{k:"L",n:"升",f:1},{k:"m3",n:"立方米",f:1000},
+      {k:"gal",n:"美制加侖",f:3.78541},{k:"qt",n:"夸脫",f:0.946353},
+      {k:"pt",n:"品脫",f:0.473176},{k:"cup",n:"杯",f:0.236588},
+      {k:"floz",n:"液體盎司",f:0.0295735}
+    ]},
+    speed:{name:"速度",base:"m/s",list:[
+      {k:"m/s",n:"米/秒",f:1},{k:"km/h",n:"公里/小時",f:0.277778},
+      {k:"mph",n:"英里/小時",f:0.44704},{k:"knot",n:"節",f:0.514444}
+    ]},
+    time:{name:"時間",base:"s",list:[
+      {k:"ms",n:"毫秒",f:0.001},{k:"s",n:"秒",f:1},{k:"min",n:"分鐘",f:60},
+      {k:"h",n:"小時",f:3600},{k:"day",n:"天",f:86400},
+      {k:"week",n:"週",f:604800}
+    ]},
+    data:{name:"資料量",base:"B",list:[
+      {k:"bit",n:"位元",f:0.125},{k:"B",n:"字節",f:1},
+      {k:"KB",n:"千字節",f:1e3},{k:"MB",n:"百萬字節",f:1e6},
+      {k:"GB",n:"十億字節",f:1e9},{k:"TB",n:"兆字節",f:1e12},
+      {k:"KiB",n:"Kibibyte",f:1024},{k:"MiB",n:"Mebibyte",f:1048576},
+      {k:"GiB",n:"Gibibyte",f:1073741824},{k:"TiB",n:"Tebibyte",f:1099511627776}
+    ]},
+    energy:{name:"能量",base:"J",list:[
+      {k:"J",n:"焦耳",f:1},{k:"kJ",n:"千焦",f:1000},
+      {k:"cal",n:"卡路里",f:4.184},{k:"kcal",n:"千卡",f:4184},
+      {k:"Wh",n:"瓦時",f:3600},{k:"kWh",n:"千瓦時",f:3.6e6}
+    ]}
+  };
+  const unitCats=document.getElementById("unitCats");
+  const unitFrom=document.getElementById("unitFrom");
+  const unitTo=document.getElementById("unitTo");
+  const unitAmount=document.getElementById("unitAmount");
+  const unitResult=document.getElementById("unitResult");
+  let curCat="length";
+  function buildCats(){
+    Object.keys(UNITS).forEach(k=>{
+      const b=document.createElement("button");
+      b.setAttribute("role","tab");
+      b.setAttribute("aria-pressed", k===curCat?"true":"false");
+      b.textContent=UNITS[k].name;
+      b.addEventListener("click",()=>{ curCat=k; buildCats(); buildUnits(); unitDo(); });
+      unitCats.appendChild(b);
+    });
+  }
+  function buildUnits(){
+    const list=UNITS[curCat].list;
+    unitFrom.innerHTML=""; unitTo.innerHTML="";
+    list.forEach((u,i)=>{
+      const o=document.createElement("option");o.value=u.k;o.textContent=`${u.k} · ${u.n}`;
+      const o2=o.cloneNode(true);
+      unitFrom.appendChild(o); unitTo.appendChild(o2);
+    });
+    unitFrom.selectedIndex=0;
+    unitTo.selectedIndex= curCat==="temperature" ? list.findIndex(x=>x.k==="F") : (list.length>1?1:0);
+  }
+  function unitDo(){
+    const v=parseFloat(unitAmount.value);
+    if(isNaN(v)){ unitResult.value="—"; return; }
+    const list=UNITS[curCat].list;
+    const f=unitFrom.value, t=unitTo.value;
+    const fu=list.find(x=>x.k===f), tu=list.find(x=>x.k===t);
+    let r;
+    if(curCat==="temperature"){
+      const c=fu.from(v);
+      r=tu.to(c);
+    } else {
+      r=v * fu.f / tu.f;
+    }
+    unitResult.value = (Math.abs(r)>=1e-4 && Math.abs(r)<1e10) ? r.toLocaleString("en-US",{maximumFractionDigits:6}) : r.toExponential(6);
+  }
+  buildCats();
+  buildUnits();
+  unitFrom.addEventListener("change",unitDo);
+  unitTo.addEventListener("change",unitDo);
+  unitAmount.addEventListener("input",unitDo);
+  document.getElementById("unitSwap").addEventListener("click",()=>{
+    const a=unitFrom.value; unitFrom.value=unitTo.value; unitTo.value=a; unitDo();
+  });
+  unitDo();
+
+  /* ============ Utils ============ */
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  }
+
+  /* ============ Init ============ */
+  onHash();
+  if(window.CANGJIE) cjRender();
+  else { cjResults.innerHTML='<div class="muted" style="grid-column:1/-1;text-align:center;padding:24px 0">倉頡資料載入中…</div>'; }
+  document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(()=>{ if(window.CANGJIE) cjRender(); },50);
+  });
+  let _cjCheck=setInterval(()=>{
+    if(window.CANGJIE){
+      cjRender();
+      clearInterval(_cjCheck);
+    }
+  },100);
+  setTimeout(()=>clearInterval(_cjCheck),5000);
+})();
+</script>
+</body>
+</html>
