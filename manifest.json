@@ -49,6 +49,6 @@
   "theme_color": "#4F46E5",
   "background_color": "#0e1226",
   "display": "standalone",
-  "scope": "/MyHub/",
-  "start_url": "/MyHub/"
+  "scope": "/PieDash/",
+  "start_url": "/PieDash/"
 }
