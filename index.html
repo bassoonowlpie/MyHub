@@ -1187,6 +1187,7 @@ details[open] summary::before{transform:rotate(90deg)}
   const unitResult=document.getElementById("unitResult");
   let curCat="length";
   function buildCats(){
+    unitCats.innerHTML="";
     Object.keys(UNITS).forEach(k=>{
       const b=document.createElement("button");
       b.setAttribute("role","tab");
