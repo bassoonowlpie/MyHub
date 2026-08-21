@@ -858,8 +858,8 @@ details[open] summary::before{transform:rotate(90deg)}
   }
   async function getConv(dir){
     await ensureOpenCC();
-    if(dir==="t2s" && !t2s) t2s=await OpenCC.Converter("t2s");
-    if(dir==="s2t" && !s2t) s2t=await OpenCC.Converter("s2t");
+    if(dir==="t2s" && !t2s) t2s=await OpenCC.Converter({from:"hk",to:"cn"});
+    if(dir==="s2t" && !s2t) s2t=await OpenCC.Converter({from:"cn",to:"hk"});
     return dir==="t2s"?t2s:s2t;
   }
   const cvInput=document.getElementById("cvInput");
